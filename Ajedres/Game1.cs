@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 
 namespace Ajedres
@@ -17,6 +18,8 @@ namespace Ajedres
 
         private Color cP1, cP2;
 
+        private string[][] tab = new string[8][];
+        private int[][] tabP = new int[8][];
 
         public Game1()
         {
@@ -34,6 +37,26 @@ namespace Ajedres
 
             tb = new Table(or, dim, new Color[] { new Color(204f / 255f, 204f / 255f, 204f / 255f), new Color(42f / 255f, 42f / 255f, 42f / 255f) });
 
+            for (int y = 0; y < 8; y++)
+            {
+                tab[y] = new string[8];
+                tabP[y] = new int[8];
+                for (int x = 0; x < 8; x++)
+                {
+                    tab[y][x] = ""+y;
+                    tabP[y][x] = 0;
+                }
+            }
+
+            for (int i = 0; i < 8; i++)
+            {
+                Console.Write("     ");
+                for (int j = 0; j < 8; j++)
+                {
+                    Console.Write(" " + tab[j][i] + " " + tabP[j][i]);
+                }
+                Console.Write("\n");
+            }
 
             base.Initialize();
         }
@@ -122,14 +145,14 @@ namespace Ajedres
         public class Piece
         {
             private Rectangle Box;
-            public Vector2 Pos;
             private Vector2 Origen;
             private Texture2D _tex;
             private Color color;
-
-            private bool is_active;
-
+            private bool is_active = false;
             private List<Vector2> mov_op;
+
+            public Vector2 Pos;
+            public char type;
 
             public Piece(Vector2 OR, Vector2 DIM, Texture2D te, Color co)
             {
@@ -155,6 +178,7 @@ namespace Ajedres
             {
                 first = true;
                 up = _up;
+                type = 'p';
             }
 
             public void update()
@@ -163,5 +187,41 @@ namespace Ajedres
             }
 
         }//EndPeon
+        public class Torre : Piece
+        {
+            public Torre(Vector2 os, Vector2 dim, Texture2D tx, Color cl) : base(os, dim, tx, cl)
+            {
+                type = 't';
+            }
+        }//EndTorre
+        public class Caballo : Piece
+        {
+            public Caballo(Vector2 os, Vector2 dim, Texture2D tx, Color cl) : base(os, dim, tx, cl)
+            {
+                type = 'c';
+            }
+        }//EndCaballo
+        public class Arfil : Piece
+        {
+            public Arfil(Vector2 os, Vector2 dim, Texture2D tx, Color cl) : base(os, dim, tx, cl)
+            {
+                type = 'a';
+            }
+        }//EndArfil
+        public class Rey : Piece
+        {
+            public Rey(Vector2 os, Vector2 dim, Texture2D tx, Color cl) : base(os, dim, tx, cl)
+            {
+                type = 'k';
+            }
+        }//EndRey
+        public class Reina : Piece
+        {
+            public Reina(Vector2 os, Vector2 dim, Texture2D tx, Color cl) : base(os, dim, tx, cl)
+            {
+                type = 'q';
+            }
+        }//EndReina
+
     }
 }
