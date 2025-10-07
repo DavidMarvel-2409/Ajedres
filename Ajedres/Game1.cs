@@ -15,9 +15,10 @@ namespace Ajedres
         private Texture2D _tex_torre;
         private Texture2D _tex_caballo;
         private Texture2D _tex_arfil;
+        private Texture2D _tex_king;
+        private Texture2D _tex_queen;
 
         private Table tb;
-        private Peon PP;
 
         private List<Piece> ps;
 
@@ -40,8 +41,6 @@ namespace Ajedres
         {
             redim(1080);
 
-
-
             base.Initialize();
         }
 
@@ -54,6 +53,9 @@ namespace Ajedres
             _tex_torre = Content.Load<Texture2D>("torre");
             _tex_caballo = Content.Load<Texture2D>("Caballo");
             _tex_arfil = Content.Load<Texture2D>("arfil");
+            _tex_queen = Content.Load<Texture2D>("queen");
+            _tex_king = Content.Load<Texture2D>("king");
+
 
             cP1 = new Color(194f / 255f, 212f / 255f, 183f / 255f);
             cP2 = new Color(63f / 255f, 54f / 255f, 59f / 255f);
@@ -72,7 +74,10 @@ namespace Ajedres
                 {
                     if (y == 1 || y == 6)
                     {
-                        tab[y][x] = "pe";
+                        if (y == 0)
+                            tabP[y][x] = 0;
+                        else
+                            tabP[y][x] = 1;
                         Peon ppp;
                         if (y == 1)
                             ppp = new Peon(new Vector2(tb.Box.X, tb.Box.Y), new Vector2(x, y + 1), new Vector2(tb.Little_box.Width, tb.Little_box.Height), _tex_peon, cP1, true);
@@ -87,40 +92,74 @@ namespace Ajedres
                         {
                             if (x == 0 || x == 7)
                             {
-                                tab[y][x] = "to";
                                 Torre tt;
                                 if (y == 0)
+                                {
                                     tt = new Torre(new Vector2(tb.Box.X, tb.Box.Y), new Vector2(x, y + 1), new Vector2(tb.Little_box.Width, tb.Little_box.Height), _tex_torre, cP1);
+                                    tabP[y][x] = 0;
+                                }
                                 else
+                                {
                                     tt = new Torre(new Vector2(tb.Box.X, tb.Box.Y), new Vector2(x, y + 1), new Vector2(tb.Little_box.Width, tb.Little_box.Height), _tex_torre, cP2);
+                                    tabP[y][x] = 1;
+                                }
                                 ps.Add(tt);
                             }
                             if (x == 1 || x == 6)
                             {
-                                tab[y][x] = "ca";
                                 Caballo cc;
                                 if (y == 0)
+                                {
                                     cc = new Caballo(new Vector2(tb.Box.X, tb.Box.Y), new Vector2(x, y + 1), new Vector2(tb.Little_box.Width, tb.Little_box.Height), _tex_caballo, cP1);
+                                    tabP[y][x] = 0;
+                                }
                                 else
+                                {
                                     cc = new Caballo(new Vector2(tb.Box.X, tb.Box.Y), new Vector2(x, y + 1), new Vector2(tb.Little_box.Width, tb.Little_box.Height), _tex_caballo, cP2);
+                                    tabP[y][x] = 1;
+                                }
                                 ps.Add(cc);
                             }
                             if (x == 2 || x == 5)
                             {
-                                tab[y][x] = "ar";
                                 Arfil ar;
                                 if (y == 0)
+                                {
                                     ar = new Arfil(new Vector2(tb.Box.X, tb.Box.Y), new Vector2(x, y + 1), new Vector2(tb.Little_box.Width, tb.Little_box.Height), _tex_arfil, cP1);
+                                    tabP[y][x] = 0;
+                                }
                                 else
+                                {
                                     ar = new Arfil(new Vector2(tb.Box.X, tb.Box.Y), new Vector2(x, y + 1), new Vector2(tb.Little_box.Width, tb.Little_box.Height), _tex_arfil, cP2);
+                                    tabP[y][x] = 1;
+                                }
                                 ps.Add(ar);
                             }
+                            if (y == 0 && x == 3)
+                            {
+                                Rey rr = new Rey(new Vector2(tb.Box.X, tb.Box.Y), new Vector2(x, y + 1), new Vector2(tb.Little_box.Width, tb.Little_box.Height), _tex_king, cP1);
+                                tabP[y][x] = 0;
+                                ps.Add(rr);
+                            }
+                            else if (y == 7 && x == 4)
+                            {
+                                Rey rr = new Rey(new Vector2(tb.Box.X, tb.Box.Y), new Vector2(x, y + 1), new Vector2(tb.Little_box.Width, tb.Little_box.Height), _tex_king, cP2);
+                                tabP[y][x] = 1;
+                                ps.Add(rr);
+                            }
+                            if (y == 0 && x == 4)
+                            {
+                                Reina rr = new Reina(new Vector2(tb.Box.X, tb.Box.Y), new Vector2(x, y + 1), new Vector2(tb.Little_box.Width, tb.Little_box.Height), _tex_queen, cP1);
+                                tabP[y][x] = 0;
+                                ps.Add(rr);
+                            }
+                            else if (y == 7 && x == 3)
+                            {
+                                Reina rr = new Reina(new Vector2(tb.Box.X, tb.Box.Y), new Vector2(x, y + 1), new Vector2(tb.Little_box.Width, tb.Little_box.Height), _tex_queen, cP2);
+                                tabP[y][x] = 1;
+                                ps.Add(rr);
+                            }
 
-                        }
-                        else
-                        {
-                            tab[y][x] = "" + y + " ";
-                            tabP[y][x] = 0;
                         }
                     }
                 }
@@ -139,13 +178,17 @@ namespace Ajedres
                     p1_p.Add(ps[i]);
                 else if (i < 14)
                     p1_p.Add(ps[i]);
-                else if (i < 22)
-                    p2_p.Add(ps[i]);
+                else if (i < 16)
+                    p1_p.Add(ps[i]);
                 else if (i < 24)
                     p2_p.Add(ps[i]);
                 else if (i < 26)
                     p2_p.Add(ps[i]);
                 else if (i < 28)
+                    p2_p.Add(ps[i]);
+                else if (i < 30)
+                    p2_p.Add(ps[i]);
+                else if (i < 32)
                     p2_p.Add(ps[i]);
             }
 
@@ -277,7 +320,7 @@ namespace Ajedres
             private Texture2D _tex;
             private Color color;
             public bool is_active = false;
-            private List<Vector2> mov_op;
+            public List<Vector2> mov_op;
 
             public Vector2 Pos;
             public char type;
@@ -309,9 +352,55 @@ namespace Ajedres
                 type = 'p';
             }
 
-            public void update()
+            public void update(int[][] tab)
             {
+                var mouse = Mouse.GetState();
+                if (Box.Contains(mouse.Position) && mouse.LeftButton == ButtonState.Pressed)
+                    is_active = true;
+                else if (!Box.Contains(mouse.Position) && mouse.LeftButton == ButtonState.Pressed)
+                    is_active = false;
 
+                if (is_active)
+                {
+                    set_posi_move(tab);
+                }
+
+            }
+
+            private void set_posi_move(int[][] tab)
+            {
+                if (first)
+                {
+                    if (up)
+                    {
+                        Vector2 mo1 = new Vector2(Pos.X, Pos.Y - 1), mo2 = new Vector2(Pos.X, Pos.Y - 2);
+                        mov_op.Add(mo1);
+                        mov_op.Add(mo2);
+                    }
+                    else
+                    {
+                        Vector2 mo1 = new Vector2(Pos.X, Pos.Y + 1), mo2 = new Vector2(Pos.X, Pos.Y + 2);
+                        mov_op.Add(mo1);
+                        mov_op.Add(mo2);
+                    }
+                }
+                else
+                {
+                    if (up)
+                    {
+                        Vector2 mo = new Vector2(Pos.X, Pos.Y - 1);
+                        mov_op.Add(mo);
+                    }
+                    else
+                    {
+                        Vector2 mo = new Vector2(Pos.X, Pos.Y + 1);
+                        mov_op.Add(mo);
+                    }
+                }
+                for (int i = 0; i < mov_op.Count; i++)
+                {
+                    //if ()
+                }
             }
 
         }//EndPeon
